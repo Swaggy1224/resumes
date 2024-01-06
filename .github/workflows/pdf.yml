@@ -1,20 +1,19 @@
 name: Compile LaTeX Resume
 on:
  push:
-   branches:
-     - main
+   branches: [ main ]
 jobs:
- build:
+ build_latex:
    runs-on: ubuntu-latest
    steps:
-   - name: Checkout Repository
-     uses: actions/checkout@v2
-   - name: Set up LaTeX environment
-     uses: dante-ev/latex-action@v2
-     with:
-       root_file: template.tex
-   - name: Archive Production Artifacts
-     uses: actions/upload-artifact@v2
-     with:
-       name: template
-       path: template.pdf
+     - name: Checkout code
+       uses: actions/checkout@v2
+     - name: Compile LaTeX document
+       uses: xu-cheng/latex-action@v3
+       with:
+         root_file: template.tex
+     - name: Archive production artifacts
+       uses: actions/upload-artifact@v2
+       with:
+         name: resume
+         path: resume.pdf
