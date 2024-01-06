@@ -1,20 +1,32 @@
-name: Build LaTeX documents
+name: LateX to PDF
+
 on:
  push:
-   branches: [ main ]
+   branches: 
+     - master
+     - main
+     - develop
+   tags:
+      - '*'
  pull_request:
    branches: [ main ]
+
 jobs:
- build:
+ build_latex:
    runs-on: ubuntu-latest
    steps:
-   - uses: actions/checkout@v4
-   - name: Compile LaTeX documents
-     uses: xu-cheng/latex-action@v3
-     with:
-       root_file: ./resumes/*.tex
-   - name: Rename output PDFs
-     run: |
-       for f in $(ls *.pdf); do
-         mv "$f" "resumes/${f%.pdf}.pdf"
-       done
+     - name: Set up Git repository
+       uses: actions/checkout@v2
+     - name: latex2pdf
+       id: compile-latex-document
+       uses: thomas-chauvet/latex2pdf-action@1.0.5
+       with:
+         output_dir: output
+         main_latex_file: template.tex
+         ctan_packages: amsmath amsfonts lua-uni-algos
+     - name: Upload PDF to the workflow tab
+       id: upload-workflow-tab
+       uses: actions/upload-artifact@v2
+       with:
+         name: output
+         path: output/resume.pdf
