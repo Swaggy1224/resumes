@@ -1,0 +1,20 @@
+name: Build LaTeX documents
+on:
+ push:
+   branches: [ main ]
+ pull_request:
+   branches: [ main ]
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   steps:
+   - uses: actions/checkout@v4
+   - name: Compile LaTeX documents
+     uses: xu-cheng/latex-action@v3
+     with:
+       root_file: ./resumes/*.tex
+   - name: Rename output PDFs
+     run: |
+       for f in $(ls *.pdf); do
+         mv "$f" "resumes/${f%.pdf}.pdf"
+       done
